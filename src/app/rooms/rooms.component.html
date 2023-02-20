@@ -1,0 +1,17 @@
+<!-- Binding the hotelName variable value by using
+the interpolation syntax {{variable_name}} -->
+<h1>Welcome to {{hotelName}}</h1>
+
+<!-- Property binding is used with any valid HTML tag or property
+and it is applied by using [html_tag_property]="variable_name" -->
+<div [hidden]="hideRooms">
+  <h3>Number of Rooms</h3>
+
+  <!-- Binding the innerText property to display the number of rooms
+   returned by the numberOfRooms variable -->
+  <div [innerText]="numberOfRooms"></div>
+</div>
+
+<!-- Calling the toggle method everytime the button is pressed and
+ then the toggle text is updated by using the toggleText variable -->
+<button (click)="toggle()">{{toggleText}}</button>
