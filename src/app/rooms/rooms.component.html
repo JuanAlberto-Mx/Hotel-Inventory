@@ -5,11 +5,68 @@ the interpolation syntax {{variable_name}} -->
 <!-- Property binding is used with any valid HTML tag or property
 and it is applied by using [html_tag_property]="variable_name" -->
 <div [hidden]="hideRooms">
-  <h3>Number of Rooms</h3>
+  <h2>Number of Rooms</h2>
 
-  <!-- Binding the innerText property to display the number of rooms
-   returned by the numberOfRooms variable -->
-  <div [innerText]="numberOfRooms"></div>
+  <!-- Binding the following properties:
+  1) innerText to display the number of rooms returned by the numberOfRooms variable.
+  2) ngStyle to change the color according to the availableRooms existence. -->
+  <div [innerText]="numberOfRooms" [ngStyle]="{'color': rooms.availableRooms ? 'steelblue':'dodgerblue'}"></div>
+
+  <h2>Available Rooms</h2>
+
+  <!-- {{rooms ?? 'No rooms'}} is equivalent to {rooms != null ? rooms : 'No rooms'}
+  In this case, we compare if the availableRooms variables is different of null.
+  If true, the value is returned and make it available to further operations.
+  If false, 'No rooms' message is returned. -->
+  {{rooms?.availableRooms ?? 'No rooms'}}
+</div>
+
+<!-- Directive to compare values (if-then statement)
+ The sentence compares if availableRooms is greater than 0.
+  If true, the 'Available Rooms' message is displayed.
+  If false, the 'No rooms available' message is displayed. -->
+<div *ngIf="rooms.availableRooms > 0">
+  <h2>Available Rooms</h2>
+
+  <!-- Create a table to display the available rooms information -->
+  <table>
+
+    <!-- Create a table header with the main elements to display -->
+    <tr>
+      <th>Index</th>
+      <th>Even/Odd</th>
+      <th>Room number</th>
+      <th>Room type</th>
+      <th>Amenities</th>
+      <th>Price</th>
+      <th>Photos</th>
+      <th>Check-in Time</th>
+      <th>Check-out Time</th>
+      <th>Rating</th>
+    </tr>
+
+    <!-- Creat the table rows iterating over the roomList variable by using a For loop.
+    1) Each existing element is assigned to the room variable.
+    2) It is possible to obtain an index and assigned to the i variable
+    3) It is possible to determine even and odd index automatically
+    4) It is possible to apply a CSS by using the ngClass -->
+    <tr [ngClass]="e?'even':'odd'" *ngFor="let room of roomList; let i = index; let e = even">
+
+      <!-- Creating the columns with the corresponding values.
+       Some elements use pipes (titlecase, currency, date, and number) to transform the resulting
+       value and give another format to the content. -->
+      <td>{{i + 1}}</td>
+      <td>{{e ? "Even": "Odd"}}</td>
+      <td>{{room.roomNumber}}</td>
+      <td>{{room.roomType}}</td>
+      <td>{{room.amenities | titlecase}}</td>
+      <td>{{room.price | currency: 'MXN'}}</td>
+      <td>{{room.photos}}</td>
+      <td>{{room.checkinTime | date:'d MMMM, y'}}</td>
+      <td>{{room.checkoutTime | date:'d MMMM, y'}}</td>
+      <td>{{room.rating | number: '1.1-1'}}</td>
+    </tr>
+  </table>
 </div>
 
 <!-- Calling the toggle method everytime the button is pressed and
