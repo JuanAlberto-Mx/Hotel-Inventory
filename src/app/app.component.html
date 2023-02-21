@@ -1,4 +1,22 @@
-<h1>Hello world</h1>
+<!-- A switch is created to display the web page content according to the user logged.
+ The 'role' attribute is related to AppComponent class role -->
+<div [ngSwitch]="role">
 
-<!-- Add the rooms component -->
-<jahm-rooms></jahm-rooms>
+  <!-- A switch-case for the User view -->
+  <div *ngSwitchCase="'User'">
+    <h1>Hello, User! Welcome to Holiday Inn!</h1>
+  </div>
+
+  <!-- A switch-case for the Admin view -->
+  <div *ngSwitchCase="'Admin'">
+    <h1>Hello Admin! You are in the management area!</h1>
+
+    <!-- Add the rooms component -->
+    <jahm-rooms></jahm-rooms>
+  </div>
+
+  <!-- A switch-case for the default option -->
+  <div *ngSwitchDefault>
+    <h1>You are not authorized to view this page.</h1>
+  </div>
+</div>
