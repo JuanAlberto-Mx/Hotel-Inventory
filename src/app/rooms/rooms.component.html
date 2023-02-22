@@ -14,61 +14,36 @@ and it is applied by using [html_tag_property]="variable_name" -->
 
   <h2>Available Rooms</h2>
 
-  <!-- {{rooms ?? 'No rooms'}} is equivalent to {rooms != null ? rooms : 'No rooms'}
-  In this case, we compare if the availableRooms variables is different of null.
+  <!-- Using interpolation syntax to compare if availableRooms variable is different of null.
   If true, the value is returned and make it available to further operations.
-  If false, 'No rooms' message is returned. -->
+  If false, 'No rooms' message is returned.
+  {{rooms ?? 'No rooms'}} is equivalent to {rooms != null ? rooms : 'No rooms'} -->
   {{rooms?.availableRooms ?? 'No rooms'}}
 </div>
 
-<!-- Directive to compare values (if-then statement)
- The sentence compares if availableRooms is greater than 0.
+<!-- Use of *ngIf directive to compare if selected room exists.
+ If true, the selected room's information is displayed in JSON format. -->
+<div *ngIf="selectedRoom">
+  {{selectedRoom | json}}
+</div>
+
+<!-- Create a button to add a new room by calling the addRoom method -->
+<div>
+  <button (click)="addRoom()">Add room</button>
+</div>
+
+<!-- Use of *ngIf directive to compare if availableRooms is greater than 0.
   If true, the 'Available Rooms' message is displayed.
   If false, the 'No rooms available' message is displayed. -->
 <div *ngIf="rooms.availableRooms > 0">
-  <h2>Available Rooms</h2>
 
-  <!-- Create a table to display the available rooms information -->
-  <table>
-
-    <!-- Create a table header with the main elements to display -->
-    <tr>
-      <th>Index</th>
-      <th>Even/Odd</th>
-      <th>Room number</th>
-      <th>Room type</th>
-      <th>Amenities</th>
-      <th>Price</th>
-      <th>Photos</th>
-      <th>Check-in Time</th>
-      <th>Check-out Time</th>
-      <th>Rating</th>
-    </tr>
-
-    <!-- Creat the table rows iterating over the roomList variable by using a For loop.
-    1) Each existing element is assigned to the room variable.
-    2) It is possible to obtain an index and assigned to the i variable
-    3) It is possible to determine even and odd index automatically
-    4) It is possible to apply a CSS by using the ngClass -->
-    <tr [ngClass]="e?'even':'odd'" *ngFor="let room of roomList; let i = index; let e = even">
-
-      <!-- Creating the columns with the corresponding values.
-       Some elements use pipes (titlecase, currency, date, and number) to transform the resulting
-       value and give another format to the content. -->
-      <td>{{i + 1}}</td>
-      <td>{{e ? "Even": "Odd"}}</td>
-      <td>{{room.roomNumber}}</td>
-      <td>{{room.roomType}}</td>
-      <td>{{room.amenities | titlecase}}</td>
-      <td>{{room.price | currency: 'MXN'}}</td>
-      <td>{{room.photos}}</td>
-      <td>{{room.checkinTime | date:'d MMMM, y'}}</td>
-      <td>{{room.checkoutTime | date:'d MMMM, y'}}</td>
-      <td>{{room.rating | number: '1.1-1'}}</td>
-    </tr>
-  </table>
+  <!-- Adding a new component to create a composite component schema.
+  1) Binding the RoomsListComponent to display all the information related to available rooms.
+  2) Setting the selectedRoom property to the value returned by selectRoom function. -->
+  <jahm-rooms-list [roomsList]="roomList" [title]="title" (selectedRoom) = selectRoom($event)></jahm-rooms-list>
 </div>
 
-<!-- Calling the toggle method everytime the button is pressed and
- then the toggle text is updated by using the toggleText variable -->
+<!-- Creat a toggle button
+ 1) Use of (click) to call the toggle method everytime the button is clicked.
+ 2) The toggle button's text is updated by using the toggleText variable value. -->
 <button (click)="toggle()">{{toggleText}}</button>
