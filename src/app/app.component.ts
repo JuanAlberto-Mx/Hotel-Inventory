@@ -1,4 +1,5 @@
-import {Component, ElementRef, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ElementRef, OnInit, Optional, ViewChild, ViewContainerRef} from '@angular/core';
+import {LoggerService} from "./logger.service";
 
 @Component({
   selector: 'jahm-root',
@@ -16,7 +17,22 @@ export class AppComponent implements OnInit {
   // name variable to reference the template
   @ViewChild('name', {static: true}) nameRef!: ElementRef;
 
+  /**
+   * Constructor with LoggerService dependency injection.
+   * Use of @Optional decorator in case of @Injectable decorator is not
+   * declared in the service.
+   * @param loggerService the LoggerService instance.
+   */
+  constructor(@Optional() private loggerService: LoggerService) {
+  }
+
   ngOnInit(): void {
+    /**
+     * Access to the loggerService dependency.
+     * Use of '?' to avoid an error in case of property nonexistence because of null values.
+     */
+    this.loggerService?.log("AppComponent.ngOnInit()");
+
     // Access to innerText property by using nativeElement
     this.nameRef.nativeElement.innerText = "Holiday Inn Orizaba";
   }

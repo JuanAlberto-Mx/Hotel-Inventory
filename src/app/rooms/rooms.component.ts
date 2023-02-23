@@ -3,7 +3,7 @@ import {
   AfterViewInit,
   Component,
   DoCheck,
-  OnInit, QueryList,
+  OnInit, QueryList, SkipSelf,
   ViewChild, ViewChildren
 } from '@angular/core';
 import {Room, RoomList} from "./rooms";
@@ -59,7 +59,7 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
    * RoomsService global instance used.
    * @param roomsService the instance of RoomsService service.
    */
-  constructor(private roomsService: RoomsService) {
+  constructor(@SkipSelf() private roomsService: RoomsService) {
   }
 
   /**

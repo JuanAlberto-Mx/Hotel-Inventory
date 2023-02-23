@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Self} from '@angular/core';
 import {RoomsService} from "../rooms/services/rooms.service";
 
 @Component({
@@ -11,7 +11,12 @@ export class EmployeeComponent implements OnInit {
 
   employeeName: string = "Albert";
 
-  constructor(private roomsService: RoomsService) {
+  /**
+   * Constructor with RoomsService dependency injection and a @Self decorator.
+   * The service must be available. Otherwise, an exception is thrown.
+   * @param roomsService
+   */
+  constructor(@Self() private roomsService: RoomsService) {
   }
 
   ngOnInit(): void {
