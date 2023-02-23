@@ -3,9 +3,7 @@ import {
   AfterViewInit,
   Component,
   DoCheck,
-  OnChanges,
   OnInit, QueryList,
-  SimpleChanges,
   ViewChild, ViewChildren
 } from '@angular/core';
 import {Room, RoomList} from "./rooms";
