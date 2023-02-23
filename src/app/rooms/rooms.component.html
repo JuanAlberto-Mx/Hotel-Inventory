@@ -1,10 +1,4 @@
-<!-- Binding the hotelName variable value by using
-the interpolation syntax {{variable_name}}
-<h1>Welcome to {{hotelName}}</h1>-->
-
 <!-- Adding a new component to display the header -->
-<jahm-header></jahm-header>
-<jahm-header></jahm-header>
 <jahm-header></jahm-header>
 
 <!-- Property binding is used with any valid HTML tag or property
@@ -37,10 +31,8 @@ and it is applied by using [html_tag_property]="variable_name" -->
   <button (click)="addRoom()">Add room</button>
 </div>
 
-<!-- Use of *ngIf directive to compare if availableRooms is greater than 0.
-  If true, the 'Available Rooms' message is displayed.
-  If false, the 'No rooms available' message is displayed. -->
-<div *ngIf="rooms.availableRooms > 0">
+<!-- *ngIf directive to compare if hideRooms exists -->
+<div *ngIf="hideRooms">
 
   <!-- Adding a new component to create a composite component schema.
   1) Binding the RoomsListComponent to display all the information related to available rooms.
