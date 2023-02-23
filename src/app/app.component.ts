@@ -1,5 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
-import {RoomsComponent} from "./rooms/rooms.component";
+import {Component, ElementRef, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 
 @Component({
   selector: 'jahm-root',
@@ -21,13 +20,4 @@ export class AppComponent implements OnInit {
     // Access to innerText property by using nativeElement
     this.nameRef.nativeElement.innerText = "Holiday Inn Orizaba";
   }
-
-  /*
-  ngAfterViewInit(): void {
-    // Create the reference to the RoomsComponent
-    const componentRef = this.userRef.createComponent(RoomsComponent);
-
-    // Modify the numberOfRooms property
-    componentRef.instance.numberOfRooms = 103;
-  }*/
 }
