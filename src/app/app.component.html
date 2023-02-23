@@ -1,33 +1,19 @@
-<!-- A switch is created to display the web page content according to the user logged.
- The 'role' attribute is related to AppComponent class role
-<div [ngSwitch]="role">-->
+<h1>Hello World</h1>
 
-  <!-- A switch-case for the User view
-  <div *ngSwitchCase="'User'">
-    <h1>Hello, User! Welcome to Holiday Inn!</h1>
-  </div>-->
+<!-- Add the rooms component -->
+<jahm-rooms></jahm-rooms>
 
-  <!-- A switch-case for the Admin view
-  <div *ngSwitchCase="'Admin'">
-    <h1>Hello Admin! You are in the management area!</h1>-->
+<!-- Add the container component -->
+<jahm-container>
 
-    <!-- Add the rooms component -->
-    <jahm-rooms></jahm-rooms>
-  <!--</div> -->
+  <!-- Add the rooms component -->
+  <jahm-rooms></jahm-rooms>
 
-  <!-- A switch-case for the default option
-  <div *ngSwitchDefault>
-    <h1>You are not authorized to view this page.</h1>
-  </div>
-</div>-->
+  <!-- Add the employees component -->
+  <jahm-employee></jahm-employee>
 
-<!-- Template to render any other elements.
- #user is used to reference the template.
-<div>
-  <ng-template #user> </ng-template>
-</div> -->
+  <h3>Message from ng content component</h3>
+</jahm-container>
 
 <!-- Template reference -->
-<div #name>
-
-</div>
+<div #name></div>
