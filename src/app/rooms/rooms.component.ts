@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {Room, RoomList} from "./rooms";
 import {HeaderComponent} from "../header/header.component";
+import {RoomsService} from "./services/rooms.service";
 
 @Component({
   selector: 'jahm-rooms',
@@ -53,7 +54,12 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
    */
   @ViewChildren(HeaderComponent) headerChildrenComponent!: QueryList<HeaderComponent>;
 
-  constructor() {
+  /**
+   * Constructor with RoomsService injection dependency.
+   * RoomsService global instance used.
+   * @param roomsService the instance of RoomsService service.
+   */
+  constructor(private roomsService: RoomsService) {
   }
 
   /**
@@ -72,39 +78,8 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
   }
 
   ngOnInit(): void {
-    // Initialization of a room list based on the RoomList interface
-    this.roomList = [
-      {
-        roomNumber: 102,
-        roomType:"King-Double",
-        amenities:"Air conditioner, Coffee, Free Wi-Fi, TV, Bathroom",
-        price: 1500,
-        photos: "king-double.jpg",
-        checkinTime: new Date('01-Feb-2023'),
-        checkoutTime: new Date('20-Feb-2023'),
-        rating: 4.5
-      },
-      {
-        roomNumber: 232,
-        roomType:"Junior Suite",
-        amenities:"Air conditioner, Coffee, Free Wi-Fi, TV, Bathroom, Kitchen",
-        price: 2000,
-        photos: "JuniorSuite.jpg",
-        checkinTime: new Date('20-Feb-2023'),
-        checkoutTime: new Date('10-Mar-2023'),
-        rating: 5.0
-      },
-      {
-        roomNumber: 301,
-        roomType:"Single",
-        amenities:"Air conditioner, Free Wi-Fi, TV, Bathroom",
-        price: 2000,
-        photos: "Single.jpg",
-        checkinTime: new Date('20-Feb-2023'),
-        checkoutTime: new Date('28-Feb-2023'),
-        rating: 2.6
-      }
-    ];
+    // Initialization of the room list getting the information from RoomsService.
+    this.roomList = this.roomsService.getRooms();
   }
 
   ngDoCheck(): void {
@@ -117,7 +92,6 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
   }
 
   ngAfterViewChecked(): void {
-
   }
 
   /**
