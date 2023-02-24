@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {RoomList} from "../rooms";
+import {APP_SERVICE_CONFIG} from "../../AppConfig/appconfig.service";
+import {AppConfig} from "../../AppConfig/appconfig.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +42,12 @@ export class RoomsService {
     }
   ];
 
-    constructor() {
+  /**
+   * Constructor with @Inject decorator as a dependency injection alternative.
+   * @param appServiceConfig the instance to access APP_SERVICE_CONFIG
+   */
+    constructor(@Inject(APP_SERVICE_CONFIG) private appServiceConfig: AppConfig) {
+      console.log("@Inject " + appServiceConfig.apiEndpoint);
       console.log("Rooms Service initialized");
     }
 
