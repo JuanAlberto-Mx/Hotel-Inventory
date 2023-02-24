@@ -1,0 +1,7 @@
+/**
+ * Environment const declaration to set the api endpoint.
+ */
+export const environment = {
+  production: false,
+  apiEndpoint: 'http://localhost:8080/api/v1'
+};
