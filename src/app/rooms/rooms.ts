@@ -11,7 +11,7 @@ export interface Room {
  * Interface to encapsulate the main attributes of a room.
  */
 export interface RoomList {
-  roomNumber: number;
+  roomNumber?: string;
   roomType: string;
   amenities: string;
   price: number;
