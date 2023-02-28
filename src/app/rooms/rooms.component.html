@@ -26,10 +26,10 @@ and it is applied by using [html_tag_property]="variable_name" -->
   {{selectedRoom | json}}
 </div>
 
-<!-- Create a button to add a new room by calling the addRoom method -->
-<div>
-  <button (click)="addRoom()">Add room</button>
-</div>
+<!-- Creat a toggle button
+1) Use of (click) to call the toggle method everytime the button is clicked.
+2) The toggle button's text is updated by using the toggleText variable value. -->
+<button (click)="toggle()">{{showButton}}</button>
 
 <!-- *ngIf directive to compare if hideRooms exists -->
 <div *ngIf="hideRooms">
@@ -37,10 +37,18 @@ and it is applied by using [html_tag_property]="variable_name" -->
   <!-- Adding a new component to create a composite component schema.
   1) Binding the RoomsListComponent to display all the information related to available rooms.
   2) Setting the selectedRoom property to the value returned by selectRoom function. -->
-  <jahm-rooms-list [roomsList]="roomList" [title]="title" (selectedRoom) = selectRoom($event)></jahm-rooms-list>
+  <jahm-rooms-list [roomsList]="roomList" [roomsListTitle]="roomListTitle" (selectedRoom) = selectRoom($event)></jahm-rooms-list>
 </div>
 
-<!-- Creat a toggle button
- 1) Use of (click) to call the toggle method everytime the button is clicked.
- 2) The toggle button's text is updated by using the toggleText variable value. -->
-<button (click)="toggle()">{{toggleText}}</button>
+<div>
+  <!-- Create a button to add a new room by calling the addRoom method -->
+  <button (click)="addRoom()">{{addButton}}</button>
+
+  <!-- Create a button to edit a room by calling the editRoom method -->
+  <button (click)="editRoom()">{{updateButton}}</button>
+
+  <!-- Create a button to delete a room by calling the deleteRoom method -->
+  <button (click)="deleteRoom()">{{deleteButton}}</button>
+</div>
+
+
