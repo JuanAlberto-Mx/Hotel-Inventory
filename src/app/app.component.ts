@@ -9,8 +9,8 @@ import {localStorageToken} from "./localstorage.token";
 })
 export class AppComponent implements OnInit {
 
-  title = 'HotelInventory';
-  role = 'Admin';
+  appTitle = 'HotelInventory';
+  userRole = 'Admin';
 
   // user variable is defined in ng-template
   @ViewChild('user', {read: ViewContainerRef}) userRef!: ViewContainerRef;

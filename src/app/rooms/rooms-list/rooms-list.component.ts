@@ -20,7 +20,7 @@ import {RoomList} from "../rooms";
 export class RoomsListComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() roomsList: RoomList[] = [];
-  @Input() title: string = "";
+  @Input() roomsListTitle: string = "";
   @Output() selectedRoom = new EventEmitter<RoomList>();
 
   constructor() {
@@ -29,7 +29,7 @@ export class RoomsListComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     // Convert to Uppercase the title if changes
     if (changes["title"]) {
-      this.title = changes["title"].currentValue.toUpperCase();
+      this.roomsListTitle = changes["title"].currentValue.toUpperCase();
     }
   }
 
