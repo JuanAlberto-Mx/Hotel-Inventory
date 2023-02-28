@@ -2,59 +2,54 @@ import {Inject, Injectable} from '@angular/core';
 import {RoomList} from "../rooms";
 import {APP_SERVICE_CONFIG} from "../../AppConfig/appconfig.service";
 import {AppConfig} from "../../AppConfig/appconfig.interface";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoomsService {
 
-  // Declaring a room list based on the RoomList interface
-  roomList: RoomList[] = [
-    {
-      roomNumber: 102,
-      roomType:"King-Double",
-      amenities:"Air conditioner, Coffee, Free Wi-Fi, TV, Bathroom",
-      price: 1500,
-      photos: "king-double.jpg",
-      checkinTime: new Date('01-Feb-2023'),
-      checkoutTime: new Date('20-Feb-2023'),
-      rating: 4.5
-    },
-    {
-      roomNumber: 232,
-      roomType:"Junior Suite",
-      amenities:"Air conditioner, Coffee, Free Wi-Fi, TV, Bathroom, Kitchen",
-      price: 2000,
-      photos: "JuniorSuite.jpg",
-      checkinTime: new Date('20-Feb-2023'),
-      checkoutTime: new Date('10-Mar-2023'),
-      rating: 5.0
-    },
-    {
-      roomNumber: 301,
-      roomType:"Single",
-      amenities:"Air conditioner, Free Wi-Fi, TV, Bathroom",
-      price: 2000,
-      photos: "Single.jpg",
-      checkinTime: new Date('20-Feb-2023'),
-      checkoutTime: new Date('28-Feb-2023'),
-      rating: 2.6
-    }
-  ];
-
   /**
    * Constructor with @Inject decorator as a dependency injection alternative.
    * @param appServiceConfig the instance to access APP_SERVICE_CONFIG
+   * @param httpClient the instance to communicate the API via HTTP.
    */
-    constructor(@Inject(APP_SERVICE_CONFIG) private appServiceConfig: AppConfig) {
+    constructor(@Inject(APP_SERVICE_CONFIG) private appServiceConfig: AppConfig, private httpClient: HttpClient) {
       console.log("@Inject " + appServiceConfig.apiEndpoint);
       console.log("Rooms Service initialized");
     }
 
   /**
-   * Gets a room list based on the RoomList interface
+   * Gets a room list by calling the Hotel Inventory API via HTTP.
+   * The HTTP is specified in the proxy.conf.json
    */
-  getRooms(): RoomList[] {
-      return this.roomList;
+  getRooms() {
+      return this.httpClient.get<RoomList[]>('/api/rooms');
+  }
+
+  /**
+   * Add a new room by calling the Hotel Inventory API via HTTP.
+   * @param room the room specifications.
+   */
+  addRoom(room: RoomList) {
+    return this.httpClient.post<RoomList[]>('/api/rooms', room);
+  }
+
+  /**
+   * Edit and update a room specification by calling the Hotel Inventory API
+   * via HTTP and sending the room number as a parameter.
+   * @param room the room specification to edit.
+   */
+  editRoom(room: RoomList) {
+    return this.httpClient.put<RoomList[]>(`/api/rooms/${room.roomNumber}`, room);
+  }
+
+  /**
+   * Delete a room specification by calling the Hotel Inventory API
+   * via HTTP and sending the room number as a parameter.
+   * @param id the room number to delete.
+   */
+  deleteRoom(roomNumber: string) {
+    return this.httpClient.delete<RoomList[]>(`/api/rooms/${roomNumber}`);
   }
 }

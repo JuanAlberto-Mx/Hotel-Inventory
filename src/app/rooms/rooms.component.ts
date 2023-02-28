@@ -9,6 +9,7 @@ import {
 import {Room, RoomList} from "./rooms";
 import {HeaderComponent} from "../header/header.component";
 import {RoomsService} from "./services/rooms.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'jahm-rooms',
@@ -23,7 +24,12 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
 
   // Properties to manage front-end elements
   hideRooms = false;
-  toggleText = "Hide";
+
+  // Properties to set the title buttons
+  showButton = "Show";
+  addButton = "Add room"
+  updateButton = "Edit room";
+  deleteButton = "Delete room";
 
   // Implementation of a room based on the Room interface
   rooms: Room = {
@@ -39,7 +45,17 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
   selectedRoom!: RoomList;
 
   // Property to set the title of the rooms list
-  title: string = "Room list";
+  roomListTitle: string = "Room list";
+
+  /**
+   * Observable property that allow other components to subscribe.
+   */
+  stream  = new Observable(observer => {
+    observer.next('user1');
+    observer.next('user2');
+    observer.next('user3');
+    observer.complete();
+  });
 
   //
   /**
@@ -68,18 +84,30 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
    * it updates the button text from "Show" to "Hide".
    */
   toggle() : void {
-    this.title = "Room list";
+    this.roomListTitle = "Room list";
     this.hideRooms = !this.hideRooms;
 
     if (this.hideRooms)
-      this.toggleText = "Show";
+      this.showButton = "Hide";
     else
-      this.toggleText = "Hide";
+      this.showButton = "Show";
   }
 
   ngOnInit(): void {
-    // Initialization of the room list getting the information from RoomsService.
-    this.roomList = this.roomsService.getRooms();
+    // Printing the values of the stream after its initialization
+    this.stream.subscribe({
+      next: (value) => console.log(value),
+      complete: () => console.log('Complete'),
+      error: () => console.log('Error')
+    });
+
+    // Initialization of the stream to subscribe other elements
+    this.stream.subscribe((data) => console.log(data));
+
+    // Initialization of the room list getting the information from HTTP.
+    this.roomsService.getRooms().subscribe(rooms => {
+      this.roomList = rooms;
+    })
   }
 
   ngDoCheck(): void {
@@ -87,8 +115,8 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
   }
 
   ngAfterViewInit(): void {
-    this.headerChildComponent.title = "Rooms View";
-    this.headerChildrenComponent.last.title = "Last item";
+    this.headerChildComponent.headerTitle = "Rooms View";
+    this.headerChildrenComponent.last.headerTitle = "Last item";
   }
 
   ngAfterViewChecked(): void {
@@ -105,9 +133,8 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
   /**
    * Add a new room to the inventory.
    */
-  addRoom() : void {
+  addRoom() {
     const room: RoomList = {
-      roomNumber: 302,
       roomType:"Single",
       amenities:"Air conditioner, Free Wi-Fi, TV, Bathroom",
       price: 2100,
@@ -117,7 +144,32 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
       rating: 3.3
     };
 
-    // Preserve the original list and add a new element ah the end
-    this.roomList = [...this.roomList, room];
+    // Send the room to the method which connects the API
+    this.roomsService.addRoom(room).subscribe((data) => {
+      this.roomList = data;
+    });
+  }
+
+  editRoom() {
+    const room: RoomList = {
+      roomNumber: "cef2da3e-8470-4351-bdf1-9345ab10dd73",
+      roomType:"Gran Suite",
+      amenities:"Air conditioner, Free Wi-Fi, TV, PlayStation 6, Bar, Coffee, Bathroom, Jacuzzi",
+      price: 5000,
+      photos: "GranSuite.jpg",
+      checkinTime: new Date('27-Feb-2023'),
+      checkoutTime: new Date('28-Feb-2023'),
+      rating: 5.0
+    };
+
+    this.roomsService.editRoom(room).subscribe((data) => {
+      this.roomList = data;
+    });
+  }
+
+  deleteRoom() {
+    this.roomsService.deleteRoom("cef2da3e-8470-4351-bdf1-9345ab10dd73").subscribe((data) => {
+      this.roomList = data;
+    });
   }
 }
