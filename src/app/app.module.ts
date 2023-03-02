@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,8 +8,19 @@ import { RoomsListComponent } from './rooms/rooms-list/rooms-list.component';
 import { HeaderComponent } from './header/header.component';
 import { ContainerComponent } from './container/container.component';
 import { EmployeeComponent } from './employee/employee.component';
-import {APP_CONFIG, APP_SERVICE_CONFIG} from "./AppConfig/appconfig.service";
-import {HttpClientModule} from "@angular/common/http";
+import { APP_CONFIG, APP_SERVICE_CONFIG } from "./AppConfig/appconfig.service";
+import { HTTP_INTERCEPTORS, HttpClientModule }  from "@angular/common/http";
+import { RequestInterceptor } from "./request.interceptor";
+import { InitService } from "./init.service";
+
+/**
+ * Method to load the initial configuration file before the application
+ * is initialized.
+ * @param initService the instance to access the InitService properties.
+ */
+function initFactory(initService: InitService) {
+  return () => initService.init();
+}
 
 @NgModule({
   declarations: [
@@ -30,6 +41,17 @@ import {HttpClientModule} from "@angular/common/http";
     {
       provide: APP_SERVICE_CONFIG,
       useValue: APP_CONFIG
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RequestInterceptor,
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initFactory,
+      deps: [InitService],
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

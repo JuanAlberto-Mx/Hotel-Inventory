@@ -1,6 +1,7 @@
 import {Component, ElementRef, Inject, OnInit, Optional, ViewChild, ViewContainerRef} from '@angular/core';
 import {LoggerService} from "./logger.service";
 import {localStorageToken} from "./localstorage.token";
+import {InitService} from "./init.service";
 
 @Component({
   selector: 'jahm-root',
@@ -19,13 +20,15 @@ export class AppComponent implements OnInit {
   @ViewChild('name', {static: true}) nameRef!: ElementRef;
 
   /**
-   * Constructor with LoggerService and localStorage dependency injection.
-   * Use of @Optional decorator in case of @Injectable decorator is not
-   * declared in the service.
+   * Constructor with LoggerService, localStorage and initService dependency injection.
+   * Use of @Optional decorator in case of @Injectable decorator is not declared
+   * in the service.
    * @param loggerService the LoggerService instance.
    * @param localStorage the localStorage instance.
+   * @param initService the initial configuration JSON file.
    */
-  constructor(@Optional() private loggerService: LoggerService, @Inject(localStorageToken) private localStorage: any) {
+  constructor(@Optional() private loggerService: LoggerService, @Inject(localStorageToken) private localStorage: any, private initService: InitService) {
+    console.log(initService.config);
   }
 
   ngOnInit(): void {
