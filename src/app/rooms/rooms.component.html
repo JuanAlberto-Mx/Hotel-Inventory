@@ -16,7 +16,7 @@ and it is applied by using [html_tag_property]="variable_name" -->
   <!-- Using interpolation syntax to compare if availableRooms variable is different of null.
   If true, the value is returned and make it available to further operations.
   If false, 'No rooms' message is returned.
-  {{rooms ?? 'No rooms'}} is equivalent to {rooms != null ? rooms : 'No rooms'} -->
+  {{rooms ?? 'No rooms'}} is equivalent to {rooms != null ? rooms : 'No rooms'}-->
   {{rooms?.availableRooms ?? 'No rooms'}}
 </div>
 
@@ -31,13 +31,17 @@ and it is applied by using [html_tag_property]="variable_name" -->
 2) The toggle button's text is updated by using the toggleText variable value. -->
 <button (click)="toggle()">{{showButton}}</button>
 
-<!-- *ngIf directive to compare if hideRooms exists -->
-<div *ngIf="hideRooms">
+<!-- Using *ngIf directive
+1) *ngIf directive to determine if rooms$ exists
+2) Assigning an alias to the rooms$ property -->
+<div *ngIf="rooms$ | async as rooms">
 
   <!-- Adding a new component to create a composite component schema.
   1) Binding the RoomsListComponent to display all the information related to available rooms.
-  2) Setting the selectedRoom property to the value returned by selectRoom function. -->
-  <jahm-rooms-list [roomsList]="roomList" [roomsListTitle]="roomListTitle" (selectedRoom) = selectRoom($event)></jahm-rooms-list>
+  2) Setting the roomList property to the value returned by rooms$
+  3) Setting the roomsListTitle to the value returned by roomListTitle.
+  4) Setting the selectedRoom property to the value returned by selectRoom function. -->
+  <jahm-rooms-list [roomsList]="rooms" [roomsListTitle]="roomListTitle" (selectedRoom) = selectRoom($event)></jahm-rooms-list>
 </div>
 
 <div>
@@ -51,4 +55,11 @@ and it is applied by using [html_tag_property]="variable_name" -->
   <button (click)="deleteRoom()">{{deleteButton}}</button>
 </div>
 
+<!-- Obtaining the number of rooms by using the roomsCount$ property -->
+<h2>Number of rooms: {{roomsCount$ | async}}</h2>
 
+<!-- Use of stream property to display the error messages -->
+<h2>{{getError$ | async}}</h2>
+
+<!-- Display the amount of bytes downloaded from the API of photos -->
+<h2>{{totalBytes}} bytes downloaded</h2>

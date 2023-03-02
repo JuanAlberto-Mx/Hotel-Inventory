@@ -2,28 +2,29 @@ import {
   AfterViewChecked,
   AfterViewInit,
   Component,
-  DoCheck,
+  DoCheck, OnDestroy,
   OnInit, QueryList, SkipSelf,
   ViewChild, ViewChildren
 } from '@angular/core';
 import {Room, RoomList} from "./rooms";
 import {HeaderComponent} from "../header/header.component";
 import {RoomsService} from "./services/rooms.service";
-import {Observable} from "rxjs";
+import {catchError, map, Observable, of, Subject, Subscription} from "rxjs";
+import {HttpEventType} from "@angular/common/http";
 
 @Component({
   selector: 'jahm-rooms',
   templateUrl: './rooms.component.html',
   styleUrls: ['./rooms.component.scss']
 })
-export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterViewChecked {
+export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterViewChecked, OnDestroy {
 
   // Properties of the RoomsComponent class
   hotelName = "Holiday Inn";
   numberOfRooms = 103;
 
   // Properties to manage front-end elements
-  hideRooms = false;
+  hideRooms = true;
 
   // Properties to set the title buttons
   showButton = "Show";
@@ -47,9 +48,44 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
   // Property to set the title of the rooms list
   roomListTitle: string = "Room list";
 
+  // Property to set the total bytes downloaded from an API vis HTTP
+  totalBytes: number = 0;
+
+  // Subscription object to manage many subscribe instances
+  subscription!: Subscription;
+
   /**
-   * Observable property that allow other components to subscribe.
+   * Property to set the error messages when something goes wrong with the
+   * communication while getting rooms information.
    */
+  error$ = new Subject<string>();
+
+  /**
+   * Active stream to push all the error messages stored in the error$ property.
+   */
+  getError$ = this.error$.asObservable();
+
+  /**
+   * Property to set all the rooms' information by using the getRooms$ property
+   * defined in the service. A catchError is used to manage the errors occurred.
+   */
+  rooms$ = this.roomsService.getRooms$.pipe(
+    catchError((err) => {
+      this.error$.next(err.message);
+
+      return of([]);
+    })
+  );
+
+  /**
+   * Property to set the size of the rooms list obtained by using the getRooms$ property.
+   * It is necessary to use a map inside the pipe.
+   */
+  roomsCount$ = this.roomsService.getRooms$.pipe(
+    map((rooms) => rooms.length)
+  );
+
+  // Observable property that allow other components to subscribe.
   stream  = new Observable(observer => {
     observer.next('user1');
     observer.next('user2');
@@ -88,12 +124,22 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
     this.hideRooms = !this.hideRooms;
 
     if (this.hideRooms)
-      this.showButton = "Hide";
-    else
       this.showButton = "Show";
+    else
+      this.showButton = "Hide";
   }
 
   ngOnInit(): void {
+    // Call the method getPhotos to initialize
+    this.roomsService.getPhotos().subscribe((event) => {
+      switch (event.type) {
+        case HttpEventType.Sent: console.log("Request has been made"); break
+        case HttpEventType.ResponseHeader: console.log("Request success"); break
+        case HttpEventType.DownloadProgress: this.totalBytes += event.loaded; break;
+        case HttpEventType.Response: console.log(event.body);
+      }
+    });
+
     // Printing the values of the stream after its initialization
     this.stream.subscribe({
       next: (value) => console.log(value),
@@ -103,11 +149,6 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
 
     // Initialization of the stream to subscribe other elements
     this.stream.subscribe((data) => console.log(data));
-
-    // Initialization of the room list getting the information from HTTP.
-    this.roomsService.getRooms().subscribe(rooms => {
-      this.roomList = rooms;
-    })
   }
 
   ngDoCheck(): void {
@@ -120,6 +161,13 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
   }
 
   ngAfterViewChecked(): void {
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe all inactive subscriptions in case of exist.
+    if(this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   /**
@@ -150,6 +198,9 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
     });
   }
 
+  /**
+   * Edit and update a room specification of the inventory.
+   */
   editRoom() {
     const room: RoomList = {
       roomNumber: "cef2da3e-8470-4351-bdf1-9345ab10dd73",
@@ -167,6 +218,9 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit, AfterView
     });
   }
 
+  /**
+   * Delete a room of the inventory.
+   */
   deleteRoom() {
     this.roomsService.deleteRoom("cef2da3e-8470-4351-bdf1-9345ab10dd73").subscribe((data) => {
       this.roomList = data;
