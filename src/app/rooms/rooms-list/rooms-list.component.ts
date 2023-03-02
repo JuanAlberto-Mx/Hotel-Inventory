@@ -19,7 +19,7 @@ import {RoomList} from "../rooms";
 })
 export class RoomsListComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() roomsList: RoomList[] = [];
+  @Input() roomsList: RoomList[] | null = [];
   @Input() roomsListTitle: string = "";
   @Output() selectedRoom = new EventEmitter<RoomList>();
 
