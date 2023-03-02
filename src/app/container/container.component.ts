@@ -5,19 +5,13 @@ import {RoomsService} from "../rooms/services/rooms.service";
 @Component({
   selector: 'jahm-container',
   templateUrl: './container.component.html',
-  styleUrls: ['./container.component.scss'],
-  providers: [RoomsService]
+  styleUrls: ['./container.component.scss']
 })
 export class ContainerComponent implements OnInit, AfterContentInit {
 
   @ContentChild(EmployeeComponent) employeeContentChild!: EmployeeComponent;
 
-  /**
-   * Constructor with dependency injection.
-   * Use of @Host decorator to use a second instance of the service.
-   * @param roomsService
-   */
-  constructor(@Host() private roomsService: RoomsService) {
+  constructor() {
   }
 
   ngOnInit(): void {
